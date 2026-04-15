@@ -55,10 +55,60 @@ function getStats(bilds) {
   return s;
 }
 
+const PASSWORD = "lavera2026";
+const AUTH_KEY = "lavera_auth";
+
+function useAuth() {
+  const [authed, setAuthed] = useState(() => {
+    try { return localStorage.getItem(AUTH_KEY) === "true"; } catch { return false; }
+  });
+  const login = (pw) => {
+    if (pw === PASSWORD) {
+      localStorage.setItem(AUTH_KEY, "true");
+      setAuthed(true);
+      return true;
+    }
+    return false;
+  };
+  return { authed, login };
+}
+
+function PasswordGate({ onLogin }) {
+  const [pw, setPw] = useState("");
+  const [error, setError] = useState(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!onLogin(pw)) setError(true);
+  };
+  return (
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#F8FAFC", fontFamily: "'DM Sans', sans-serif" }}>
+      <form onSubmit={handleSubmit} style={{ background: "#fff", padding: 32, borderRadius: 16, boxShadow: "0 4px 24px rgba(0,0,0,0.08)", width: 340, textAlign: "center" }}>
+        <h2 style={{ fontSize: 20, fontWeight: 700, margin: "0 0 6px", color: "#1E293B" }}>Lavera Produktion</h2>
+        <p style={{ fontSize: 13, color: "#64748B", margin: "0 0 20px" }}>Bitte Passwort eingeben</p>
+        <input
+          type="password"
+          value={pw}
+          onChange={e => { setPw(e.target.value); setError(false); }}
+          placeholder="Passwort"
+          autoFocus
+          style={{ width: "100%", padding: "10px 14px", borderRadius: 8, border: error ? "1.5px solid #EF4444" : "1.5px solid #E2E8F0", fontSize: 14, outline: "none", boxSizing: "border-box", marginBottom: 12 }}
+        />
+        {error && <p style={{ color: "#EF4444", fontSize: 12, margin: "-6px 0 10px" }}>Falsches Passwort</p>}
+        <button type="submit" style={{ width: "100%", padding: "10px 0", borderRadius: 8, background: "#1E293B", color: "#fff", fontSize: 14, fontWeight: 600, border: "none", cursor: "pointer" }}>
+          Anmelden
+        </button>
+      </form>
+    </div>
+  );
+}
+
 export default function Dashboard() {
+  const { authed, login } = useAuth();
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState("all");
+
+  if (!authed) return <PasswordGate onLogin={login} />;
 
   const totals = { fertig: 0, labeling: 0, review: 0, no_stop: 0 };
   data.forEach(p => { const s = getStats(p.bilds); Object.keys(totals).forEach(k => totals[k] += s[k]); });
