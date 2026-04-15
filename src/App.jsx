@@ -167,6 +167,12 @@ export default function Dashboard() {
         ))}
       </div>
 
+      <a href="https://www.figma.com/slides/oJKhoifk93GWi1E98P5o5P" target="_blank" rel="noopener noreferrer"
+        style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 16px", background: "#EEF2FF", border: "1px solid #C7D2FE", borderRadius: 10, textDecoration: "none", color: "#4338CA", fontSize: 13, fontWeight: 600, marginBottom: 14 }}>
+        <span style={{ fontSize: 16 }}>🎨</span> Alle Bilder ansehen — Production Slides (Figma)
+        <span style={{ fontSize: 14 }}>↗</span>
+      </a>
+
       <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap", alignItems: "center" }}>
         <input type="text" placeholder="Suche…" value={search} onChange={e => setSearch(e.target.value)}
           style={{ padding: "5px 10px", borderRadius: 6, border: "1px solid #E2E8F0", fontSize: 12, outline: "none", width: 140 }} />
