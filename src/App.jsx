@@ -119,10 +119,10 @@ export default function Dashboard() {
     if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
     if (catFilter !== "all" && p.cat !== catFilter) return false;
     const s = getStats(p.bilds);
-    if (filter === "done") return s.fertig === 8;
+    if (filter === "done") return s.fertig + s.no_stop === 8;
     if (filter === "review") return s.review > 0;
     if (filter === "labeling") return s.labeling > 0;
-    if (filter === "inprogress") return s.fertig < 8;
+    if (filter === "inprogress") return s.fertig + s.no_stop < 8;
     return true;
   });
 
@@ -189,7 +189,7 @@ export default function Dashboard() {
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
         {filtered.map((p, idx) => {
           const s = getStats(p.bilds);
-          const done = s.fertig === 8;
+          const done = s.fertig + s.no_stop === 8;
           return (
             <a key={idx} href={p.drive || "#"} target="_blank" rel="noopener noreferrer"
               style={{ textDecoration: "none", color: "inherit", display: "block",
